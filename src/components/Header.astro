@@ -20,17 +20,20 @@ import Settings from './Settings.astro';
 	header {
 		margin: 0;
 		padding: 0 1em;
-		background: white;
-		box-shadow: 0 2px 8px rgba(var(--black), 5%);
+		background: #ffffff;
+		border-top: 3px solid var(--accent);
 	}
 	h2 {
 		margin: 0;
 		font-size: 1em;
+		font-family: "DM Sans", system-ui, sans-serif;
+		font-weight: 700;
+		letter-spacing: -0.01em;
 	}
-
 	h2 a,
 	h2 a.active {
 		text-decoration: none;
+		color: rgb(var(--black));
 	}
 	nav {
 		display: flex;
@@ -44,17 +47,21 @@ import Settings from './Settings.astro';
 	}
 	nav a {
 		padding: 1em 0.5em;
-		color: var(--black);
-		border-bottom: 4px solid transparent;
+		color: rgb(var(--gray));
+		border-bottom: 2px solid transparent;
 		text-decoration: none;
+		font-family: "DM Sans", system-ui, sans-serif;
+		font-size: 0.9em;
+		font-weight: 500;
+		transition: color 0.15s;
+	}
+	nav a:hover {
+		color: rgb(var(--black));
 	}
 	nav a.active {
 		text-decoration: none;
+		color: rgb(var(--black));
 		border-bottom-color: var(--accent);
-	}
-	.social-links,
-	.social-links a {
-		display: flex;
 	}
 	@media (max-width: 720px) {
 		.social-links {
