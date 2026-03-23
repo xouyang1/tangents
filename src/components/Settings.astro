@@ -1,0 +1,217 @@
+<button id="settings-toggle" aria-label="Settings" title="Settings">
+	<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+		<circle cx="12" cy="12" r="3"></circle>
+		<path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+	</svg>
+</button>
+
+<div id="settings-panel" class="settings-panel" hidden>
+	<div class="settings-header">
+		<span>Settings</span>
+		<button id="settings-close" aria-label="Close settings">&times;</button>
+	</div>
+	<div class="settings-section">
+		<label class="settings-label">Font</label>
+		<div class="custom-font-input-row">
+			<input type="text" id="custom-font-input" placeholder="e.g. Merriweather" autocomplete="off" />
+			<button id="custom-font-apply" type="button">Apply</button>
+		</div>
+		<p class="custom-font-hint">Browse fonts at <a href="https://fonts.google.com" target="_blank" rel="noopener">Google Fonts</a>, then type the name here</p>
+		<button id="custom-font-reset" type="button" class="reset-btn">Reset to default (Lora)</button>
+	</div>
+</div>
+
+<style>
+	#settings-toggle {
+		background: none;
+		border: none;
+		cursor: pointer;
+		padding: 0.5em;
+		color: rgb(var(--gray-dark));
+		display: flex;
+		align-items: center;
+		border-radius: 6px;
+		transition: background 0.15s;
+	}
+	#settings-toggle:hover {
+		background: rgb(var(--gray-light));
+	}
+
+	.settings-panel {
+		position: fixed;
+		top: 0;
+		right: 0;
+		width: 320px;
+		max-width: 90vw;
+		height: 100vh;
+		background: white;
+		box-shadow: -4px 0 24px rgba(0,0,0,0.12);
+		z-index: 1000;
+		overflow-y: auto;
+		padding: 1.25em;
+		box-sizing: border-box;
+	}
+	.settings-panel[hidden] {
+		display: none;
+	}
+
+	.settings-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 1.5em;
+		font-weight: 700;
+		font-size: 1.1em;
+	}
+	#settings-close {
+		background: none;
+		border: none;
+		font-size: 1.5em;
+		cursor: pointer;
+		padding: 0.25em;
+		color: rgb(var(--gray-dark));
+		line-height: 1;
+	}
+
+	.settings-label {
+		display: block;
+		font-size: 0.85em;
+		font-weight: 700;
+		color: rgb(var(--gray));
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		margin-bottom: 0.75em;
+	}
+
+	.custom-font-input-row {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5em;
+	}
+	#custom-font-input {
+		width: 100%;
+		padding: 0.5em 0.75em;
+		border: 2px solid rgb(var(--gray-light));
+		border-radius: 6px;
+		font-size: 0.9em;
+		font-family: inherit;
+		outline: none;
+		box-sizing: border-box;
+		transition: border-color 0.15s;
+	}
+	#custom-font-input:focus {
+		border-color: var(--accent);
+	}
+	#custom-font-apply {
+		width: 100%;
+		padding: 0.5em 1em;
+		border: none;
+		border-radius: 6px;
+		background: var(--accent);
+		color: white;
+		font-size: 0.85em;
+		font-weight: 700;
+		cursor: pointer;
+		transition: opacity 0.15s;
+	}
+	#custom-font-apply:hover {
+		opacity: 0.85;
+	}
+	.custom-font-hint {
+		font-size: 0.75em;
+		color: rgb(var(--gray));
+		margin: 0.5em 0 0;
+	}
+	.custom-font-hint a {
+		color: var(--accent);
+	}
+	.reset-btn {
+		margin-top: 1em;
+		width: 100%;
+		padding: 0.5em 1em;
+		border: 2px solid rgb(var(--gray-light));
+		border-radius: 6px;
+		background: white;
+		color: rgb(var(--gray));
+		font-size: 0.8em;
+		cursor: pointer;
+		transition: border-color 0.15s;
+	}
+	.reset-btn:hover {
+		border-color: rgb(var(--gray));
+	}
+</style>
+
+<script>
+	const toggle = document.getElementById('settings-toggle')!;
+	const panel = document.getElementById('settings-panel')!;
+	const close = document.getElementById('settings-close')!;
+	const customInput = document.getElementById('custom-font-input') as HTMLInputElement;
+	const customApply = document.getElementById('custom-font-apply')!;
+	const resetBtn = document.getElementById('custom-font-reset')!;
+
+	const loadedFonts = new Set(['Lora']);
+
+	function loadFont(name: string) {
+		if (loadedFonts.has(name)) return;
+		const slug = name.replace(/\s+/g, '+');
+		const link = document.createElement('link');
+		link.rel = 'stylesheet';
+		link.href = `https://fonts.googleapis.com/css2?family=${slug}:wght@400;700&display=swap`;
+		document.head.appendChild(link);
+		loadedFonts.add(name);
+	}
+
+	// Show current font in input
+	const current = localStorage.getItem('blog-font') || 'Lora';
+	if (current !== 'Lora') {
+		customInput.value = current;
+	}
+
+	// Toggle panel
+	toggle.addEventListener('click', () => {
+		panel.hidden = !panel.hidden;
+	});
+	close.addEventListener('click', () => {
+		panel.hidden = true;
+	});
+
+	// Close on outside click
+	document.addEventListener('click', (e) => {
+		if (!panel.hidden && !panel.contains(e.target as Node) && e.target !== toggle && !toggle.contains(e.target as Node)) {
+			panel.hidden = true;
+		}
+	});
+
+	// Close on Escape
+	document.addEventListener('keydown', (e) => {
+		if (e.key === 'Escape' && !panel.hidden) {
+			panel.hidden = true;
+		}
+	});
+
+	function applyFont(font: string) {
+		localStorage.setItem('blog-font', font);
+		document.documentElement.style.setProperty('--body-font', `"${font}"`);
+		loadFont(font);
+	}
+
+	// Apply custom font
+	function applyCustomFont() {
+		const font = customInput.value.trim();
+		if (!font) return;
+		applyFont(font);
+	}
+
+	customApply.addEventListener('click', applyCustomFont);
+	customInput.addEventListener('keydown', (e) => {
+		if (e.key === 'Enter') applyCustomFont();
+	});
+
+	// Reset to default
+	resetBtn.addEventListener('click', () => {
+		localStorage.removeItem('blog-font');
+		document.documentElement.style.setProperty('--body-font', '"Lora"');
+		customInput.value = '';
+	});
+</script>
