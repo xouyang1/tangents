@@ -12,3 +12,8 @@ bun run dev   # localhost:4321
 - **RSS feed** at `/rss.xml` via `@astrojs/rss`
 - **Sitemap** auto-generated via `@astrojs/sitemap`
 - **Image optimization** — automatic resizing and format conversion for post images
+
+
+## TODO
+- filter tags? (health)
+

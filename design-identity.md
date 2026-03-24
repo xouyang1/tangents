@@ -1,7 +1,7 @@
-<!-- What: Visual identity spec for Tangents blog — palette, influences, design principles, component usage.
+<!-- What: Visual identity spec for Tangents blog — palette, influences, design principles.
      Where else: CSS variables live in src/styles/global.css; component-level styles in src/components/.
      Stability: Living document — update when the palette or design direction changes.
-     Last reviewed: 2026-03-22 -->
+     Last reviewed: 2026-03-23 -->
 
 # Tangents — Design Identity
 
@@ -21,42 +21,38 @@ The synthesis: a palette that is precise and opinionated (Appleton) but deployed
 
 ## Palette
 
-| Role | Value | CSS variable | Usage |
-|------|-------|-------------|-------|
-| Background | `#ffffff` | — (set on `body`) | Page background, header, footer. Pure white — the Chimero influence. The background disappears entirely, letting typography and teal accent do the work. Restraint as design choice. |
-| Text | `#1c1917` | `--black`, `--gray-dark` | Body text, headings. Stone-900: warm enough to feel human, dark enough for crisp reading. |
-| Accent | `#0f766e` | `--accent` | Links, active nav, blockquote border, buttons. Teal-700: reads as precision and depth — the color of engineering diagrams and technical notation. Confident without being loud. |
-| Accent dark | `#115e59` | `--accent-dark` | Hover states. Teal-800: deepens on interaction, giving links a tactile feel. |
-| Secondary | `#b45309` | `--secondary` | Data callouts, emphasis, rare highlights. Amber-700: the warm pen marking up a cool notebook. Creates dimensional tension with teal — cool precision meets warm annotation. |
-| Gray | `#78716c` | `--gray` | Dates, captions, muted text. Stone-500: warm gray that bridges the cool accent and warm text tones. |
-| Gray light | `#e7e5e4` | `--gray-light` | Borders, dividers, inline code background. Stone-200. |
+| Role | Value | Usage |
+|------|-------|-------|
+| Background | `#ffffff` | Pure white — the background disappears, letting typography and accent do the work. |
+| Text | `#1c1917` | Stone-900: warm enough to feel human, dark enough for crisp reading. |
+| Accent | `#0f766e` | Links, active nav, blockquote border. Teal-700: precision and depth. |
+| Accent dark | `#115e59` | Hover states. Teal-800: deepens on interaction. |
+| Secondary | `#b45309` | Data callouts, rare highlights. Amber-700: the warm pen marking up a cool notebook. |
+| Gray | `#78716c` | Dates, captions, muted text. Stone-500. |
+| Gray light | `#e7e5e4` | Borders, dividers, inline code background. Stone-200. |
 
-### How the colors relate
-
-The palette operates on a cool/warm axis. Teal accent is the primary structural color — it marks everything interactive or navigational. Amber secondary is its complement, reserved for moments that need to *interrupt* the reader (callouts, data emphasis). The warm stone grays mediate between these two temperatures, keeping the neutral space cohesive. Background and text are both stone-family, so the page reads as a unified surface that the accent colors punctuate.
+Cool/warm axis: teal marks structure and interaction, amber interrupts for emphasis, warm stone grays mediate between the two.
 
 ---
 
 ## Design principles
 
-1. **Readability first.** Large serif body text, generous line height, constrained width. The palette and layout should disappear behind the writing.
-2. **Restraint in color.** Teal is used sparingly — links, borders, active states. Most of the page is neutral. The secondary amber is rarer still.
-3. **No decoration for decoration's sake.** No gradients, shadows (except Settings panel), or ornamental elements.
-4. **Precision over personality.** The visual language signals methodical research and data-driven analysis. Every color choice should feel deliberate, not playful.
-5. **Content-first hierarchy.** Color serves wayfinding (where can I click? what's active?) not mood. If removing an accent color would make the page harder to *use*, it belongs. If removing it would only make the page less *pretty*, it doesn't.
+1. **Readability first.** Large serif body text, generous line height, constrained width. The palette and layout disappear behind the writing.
+2. **Restraint in color.** Teal is used sparingly — links, borders, active states. Most of the page is neutral. Amber is rarer still.
+3. **No decoration for decoration's sake.** No gradients, shadows, or ornamental elements.
+4. **Playful but intelligent.** The visual language signals curiosity with purpose — following threads wherever they lead, arriving at something useful.
+5. **Content-first hierarchy.** Color serves wayfinding (where can I click? what's active?) not mood.
 
 ---
 
-## Component patterns
+## Icon
 
-**Header** — Teal `border-top: 3px solid var(--accent)`. Background matches page (`#fafaf9`). Active nav link gets a teal bottom border. The top border is the strongest color signal on the page — it anchors the brand.
+A rounded blob character (back-facing silhouette) holding a lotus leaf above its head like an umbrella. The leaf and body together form the letter T for Tangents. Teal leaf, dark charcoal body, white outline glow for dark-background contrast.
 
-**Footer** — Matches page background. Light top border (`--gray-light`). Muted text. No accent color — the footer recedes.
+Source artwork: `src/assets/favicon-source.jpeg`
 
-**Links** — `--accent` default, `--accent-dark` on hover. The teal-to-darker-teal transition gives links a tactile depth without introducing new hues.
+---
 
-**Blockquotes** — `3px` left border in `--accent`. Gray text. The teal border marks quoted material as structurally distinct from body text.
+## Illustration style
 
-**Buttons (Settings Apply)** — Solid `--accent` background, white text. Hover dims via opacity. Buttons are rare, so when they appear the teal is unmistakable as a call to action.
-
-**Secondary accent** — `--secondary` (amber) is defined and available but used sparingly. Intended for data tables, chart highlights, or inline callouts where a warm contrast to the cool teal draws the eye to specific values.
+Flat vector, clean outlines, minimal detail. Muted pastel palette. No text baked into images. Accuracy over aesthetics.
