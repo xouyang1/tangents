@@ -8,15 +8,17 @@ const { data, info } = await sharp(input).ensureAlpha().raw().toBuffer({ resolve
 const px = new Uint8Array(data);
 const { width, height, channels: ch } = info;
 
-// 1. Flood fill from edges — removes background including body-leaf gap
-//    if connected. Uses generous threshold to reach into crevices.
+// 1. Flood fill from edges — removes background
 const visited = new Uint8Array(width * height);
 const queue = [];
 for (let x = 0; x < width; x++) { queue.push([x,0],[x,height-1]); }
 for (let y = 0; y < height; y++) { queue.push([0,y],[width-1,y]); }
 
+// Background is purple/magenta — high red, low green, high blue
 function isBg(i) {
-  return px[i] > 220 && px[i+1] > 220 && px[i+2] > 220;
+  const r = px[i], g = px[i+1], b = px[i+2];
+  // Purple: high R, low G, high B
+  return r > 140 && g < 100 && b > 140 && (r + b) / 2 - g > 80;
 }
 
 while (queue.length > 0) {
@@ -32,9 +34,8 @@ while (queue.length > 0) {
 }
 console.log('Flood fill from edges done');
 
-// 2. Find remaining white regions NOT reached by flood fill.
-//    Large ones (>500px) are likely trapped background (body-leaf gap).
-//    Small ones are leaf decorations — keep them.
+// 2. Find and remove large trapped white regions (body-leaf gap).
+//    Keep small ones (leaf decorations).
 const labelMap = new Int32Array(width * height).fill(-1);
 let regionId = 0;
 const regionSizes = [];
@@ -42,11 +43,9 @@ const regionSizes = [];
 for (let y = 0; y < height; y++) for (let x = 0; x < width; x++) {
   const pi = y*width+x;
   const i = pi*ch;
-  if (px[i+3] === 0) continue;
-  if (labelMap[pi] >= 0) continue;
-  if (!(px[i] > 220 && px[i+1] > 220 && px[i+2] > 220)) continue;
-  
-  // BFS to find connected white region
+  if (px[i+3] === 0 || labelMap[pi] >= 0) continue;
+  if (!isBg(pi*ch)) continue;
+
   const rq = [[x,y]];
   const pixels = [];
   while (rq.length > 0) {
@@ -56,7 +55,7 @@ for (let y = 0; y < height; y++) for (let x = 0; x < width; x++) {
     if (labelMap[rpi] >= 0) continue;
     const ri = rpi*ch;
     if (px[ri+3] === 0) continue;
-    if (!(px[ri] > 220 && px[ri+1] > 220 && px[ri+2] > 220)) continue;
+    if (!isBg(ri)) continue;
     labelMap[rpi] = regionId;
     pixels.push(ri);
     rq.push([rx-1,ry],[rx+1,ry],[rx,ry-1],[rx,ry+1]);
@@ -65,7 +64,6 @@ for (let y = 0; y < height; y++) for (let x = 0; x < width; x++) {
   regionId++;
 }
 
-// Remove large white regions (trapped background), keep small ones (decorations)
 let removedRegions = 0;
 for (const region of regionSizes) {
   if (region.size > 500) {
@@ -76,57 +74,46 @@ for (const region of regionSizes) {
 }
 console.log(`Kept ${regionSizes.length - removedRegions} small white regions (decorations)`);
 
-// 3. Clean edges: remove any edge pixel that's lighter than its interior neighbor.
-//    Keep dark edge pixels at full opacity. No semi-transparency — avoids halos.
+// 3. Remove any remaining pixel with purple tint (JPEG blending artifacts).
+//    Purple = R and B both significantly higher than G.
+{
+  let purged = 0;
+  for (let y = 0; y < height; y++) for (let x = 0; x < width; x++) {
+    const i = (y*width+x)*ch;
+    if (px[i+3] === 0) continue;
+    const r = px[i], g = px[i+1], b = px[i+2];
+    // Purple bg has very low green (<80). Pink artwork (flower, ladybug) has green >100.
+    if (r > g + 15 && b > g + 15 && g < 80) {
+      px[i+3] = 0;
+      purged++;
+    }
+  }
+  console.log(`Purged ${purged} purple-tinted pixels`);
+}
+
+// 4. Erode 2px — clean up remaining edge noise
 for (let pass = 0; pass < 2; pass++) {
   const toRemove = [];
   for (let y = 0; y < height; y++) for (let x = 0; x < width; x++) {
     const i = (y*width+x)*ch;
     if (px[i+3] === 0) continue;
-
-    let isEdge = false;
     for (const [dx,dy] of [[-1,0],[1,0],[0,-1],[0,1]]) {
       const nx=x+dx, ny=y+dy;
-      if (nx<0||nx>=width||ny<0||ny>=height) { isEdge=true; break; }
-      if (px[(ny*width+nx)*ch+3] === 0) { isEdge=true; break; }
-    }
-    if (!isEdge) continue;
-
-    const bright = (px[i]+px[i+1]+px[i+2])/3;
-    // Remove light edge pixels (white-contaminated from JPEG)
-    if (bright > 180) { toRemove.push(i); continue; }
-
-    // Find nearest interior pixel to compare
-    let refBright = -1;
-    for (let r = 2; r <= 6; r++) {
-      for (const [dx,dy] of [[r,0],[-r,0],[0,r],[0,-r]]) {
-        const nx=x+dx, ny=y+dy;
-        if (nx<0||nx>=width||ny<0||ny>=height) continue;
-        const ni = (ny*width+nx)*ch;
-        if (px[ni+3] === 0) continue;
-        let interior = true;
-        for (const [ddx,ddy] of [[-1,0],[1,0],[0,-1],[0,1]]) {
-          const nnx=nx+ddx, nny=ny+ddy;
-          if (nnx<0||nnx>=width||nny<0||nny>=height||px[(nny*width+nnx)*ch+3]===0) { interior=false; break; }
-        }
-        if (interior) { refBright=(px[ni]+px[ni+1]+px[ni+2])/3; break; }
-      }
-      if (refBright >= 0) break;
-    }
-
-    // If edge pixel is significantly lighter than interior, it's contaminated
-    if (refBright >= 0 && bright > refBright + 40) {
-      toRemove.push(i);
+      if (nx<0||nx>=width||ny<0||ny>=height) { toRemove.push(i); break; }
+      if (px[(ny*width+nx)*ch+3] === 0) { toRemove.push(i); break; }
     }
   }
   for (const i of toRemove) px[i+3] = 0;
-  console.log(`Edge cleanup pass ${pass+1}: removed ${toRemove.length} pixels`);
+  console.log(`Erode pass ${pass+1}: removed ${toRemove.length} pixels`);
 }
 
 const result = await sharp(Buffer.from(px), { raw: { width, height, channels: ch } })
   .trim()
   .png()
   .toBuffer();
+
+const rMeta = await sharp(result).metadata();
+console.log(`Result: ${rMeta.width}x${rMeta.height}`);
 
 const bg = { r:0,g:0,b:0,alpha:0 };
 
@@ -136,12 +123,11 @@ for (const [n,s] of [['apple-touch-icon.png',180],['icon-192.png',192],['icon-51
 }
 await sharp(result).png().toFile(`${publicDir}/favicon-full.png`);
 
-// Small sizes (favicon): add outer-only white glow for tab contrast
+// Small sizes: outer-only white glow for tab contrast
 const { data: glowData, info: glowInfo } = await sharp(result).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
 const glowPx = new Uint8Array(glowData);
 const gw = glowInfo.width, gh = glowInfo.height, gc = glowInfo.channels;
 
-// Fill interior gaps for solid silhouette (outer-only glow)
 const filledPx = new Uint8Array(glowPx);
 const ext = new Uint8Array(gw * gh);
 const gq = [];
@@ -172,10 +158,10 @@ const withGlow = await sharp(glowOutline)
   .composite([{ input: await sharp(result).toBuffer(), gravity: 'center' }])
   .png().toBuffer();
 
-// Small sizes from glowed version
 await sharp(withGlow).resize(32,32,{fit:'contain',background:bg}).png().toFile(`${publicDir}/favicon-32.png`);
 await sharp(withGlow).resize(16,16,{fit:'contain',background:bg}).png().toFile(`${publicDir}/favicon-16.png`);
 
+// ICO
 const p16=await sharp(withGlow).resize(16,16,{fit:'contain',background:bg}).png().toBuffer();
 const p32=await sharp(withGlow).resize(32,32,{fit:'contain',background:bg}).png().toBuffer();
 function mkIco(imgs){const h=Buffer.alloc(6);h.writeUInt16LE(0,0);h.writeUInt16LE(1,2);h.writeUInt16LE(imgs.length,4);const es=[];let o=6+imgs.length*16;for(const{w,h:ih,data}of imgs){const e=Buffer.alloc(16);e.writeUInt8(w>=256?0:w,0);e.writeUInt8(ih>=256?0:ih,1);e.writeUInt16LE(1,4);e.writeUInt16LE(32,6);e.writeUInt32LE(data.length,8);e.writeUInt32LE(o,12);es.push(e);o+=data.length;}return Buffer.concat([h,...es,...imgs.map(i=>i.data)]);}

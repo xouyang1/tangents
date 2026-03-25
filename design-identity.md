@@ -49,7 +49,7 @@ Cool/warm axis: teal marks structure and interaction, amber interrupts for empha
 
 A rounded blob character (back-facing silhouette) holding a lotus leaf above its head like an umbrella. The leaf and body together form the letter T for Tangents. Teal leaf, dark charcoal body, white outline glow for dark-background contrast.
 
-Source artwork: `src/assets/favicon-source.jpeg`
+Source artwork: `src/assets/favicon-source.jpeg` (purple background for clean edge extraction). Regen script: `scripts/regen-favicon.mjs`.
 
 ---
 
