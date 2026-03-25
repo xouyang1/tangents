@@ -20,6 +20,9 @@
     "astro": "^6.0.8",
     "sharp": "^0.34.5"
   },
+  "overrides": {
+    "fast-xml-parser": "5.5.9"
+  },
   "devDependencies": {
     "@playwright/test": "^1.58.2",
     "playwright": "^1.58.2"
