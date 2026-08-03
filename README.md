@@ -1,19 +1,46 @@
-# Tangents
+# Exogradient website
 
-Personal blog built with [Astro](https://astro.build). Deployed at [on-tangents.vercel.app](https://on-tangents.vercel.app). Posts live in `src/content/blog/` as markdown files.
+The public Exogradient site, built with Astro and deployed at
+[exogradient.dev](https://www.exogradient.dev/).
+
+The homepage is an interactive showcase of Exogradient artifacts. Editorial
+pieces remain available under `/blog` and branch from related homepage objects
+when appropriate.
+
+## Current implementation boundary
+
+- Production homepage: `src/pages/index.astro`
+- Editorial content: `src/content/blog/`
+- Shared site styling: `src/styles/global.css`
+- Canonical cross-project decisions: the `exogradient/design-memory` repository
+- Homepage implementation contract: `docs/homepage-implementation.md`
+
+The repository directory retains its historical `tangents` name for now. That
+directory name is not the product identity and must not leak into public copy,
+metadata, deployment configuration, or new documentation.
+
+## Development
 
 ```sh
-bun run dev   # localhost:4321
+npm run dev
 ```
 
-## Features
+Astro serves the local site at `http://localhost:4321` by default.
 
-- **Reader font customization** — Gear icon in the header lets readers set any [Google Font](https://fonts.google.com). Choice persists in localStorage. Default is Lora.
-- **RSS feed** at `/rss.xml` via `@astrojs/rss`
-- **Sitemap** auto-generated via `@astrojs/sitemap`
-- **Image optimization** — automatic resizing and format conversion for post images
+## Verification
 
+```sh
+npm run build
+```
 
-## TODO
-- filter tags? (health)
+Homepage changes also require visual checks at desktop and mobile viewports,
+keyboard testing, reduced-motion testing, and verification that embedded
+artifacts do not create nested scrolling.
 
+## Existing site features
+
+- Reader font customization for editorial pages
+- RSS feed at `/rss.xml`
+- Generated sitemap
+- Astro image optimization
+- Vercel Analytics and Speed Insights

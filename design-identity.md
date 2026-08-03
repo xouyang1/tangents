@@ -1,9 +1,18 @@
-<!-- What: Visual identity spec for Tangents blog — palette, influences, design principles.
+<!-- What: Legacy visual identity for Tangents editorial surfaces.
+     Scope: Blog index, articles, and editorial components only. It does not govern
+     the Exogradient homepage or cross-project identity.
+     Canonical cross-project source: exogradient/design-memory.
      Where else: CSS variables live in src/styles/global.css; component-level styles in src/components/.
-     Stability: Living document — update when the palette or design direction changes.
-     Last reviewed: 2026-03-23 -->
+     Stability: Maintained only while the current editorial treatment remains in production.
+     Last reviewed: 2026-08-02 -->
 
-# Tangents — Design Identity
+# Tangents editorial identity
+
+> **Scope note:** This is the inherited identity of the editorial surface. Its
+> pure-white, text-first, and no-shadow/no-gradient rules are not constraints
+> on the Exogradient homepage. Current homepage architecture, experience
+> principles, and visual-system decisions live in the dedicated
+> `exogradient/design-memory` repository.
 
 Nickname: **Field Notes**
 
