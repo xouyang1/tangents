@@ -1,0 +1,24 @@
+---
+import ArtifactCaption from './ArtifactCaption.astro';
+
+const embedURL = import.meta.env.PUBLIC_SPLASH_EMBED_URL ?? 'https://splash-of-hue.vercel.app/?embed=play';
+---
+
+<article class="artifact splash-artifact" aria-labelledby="splash-title">
+	<div class="splash-shell">
+		<iframe
+			class="splash-frame"
+			src={embedURL}
+			title="Play a round of Splash of Hue"
+			loading="eager"
+			allow="fullscreen"
+		></iframe>
+	</div>
+	<div id="splash-title">
+		<ArtifactCaption
+			title="Splash of Hue"
+			href="https://splash-of-hue.vercel.app/"
+			actionLabel="Play the full Splash of Hue game"
+		/>
+	</div>
+</article>

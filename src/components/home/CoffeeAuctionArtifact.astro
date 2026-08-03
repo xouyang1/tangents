@@ -1,0 +1,72 @@
+---
+import ArtifactCaption from './ArtifactCaption.astro';
+---
+
+<article class="artifact coffee-artifact" aria-labelledby="coffee-title" data-coffee-artifact>
+	<div class="coffee-object">
+		<button class="auction-dial" type="button" aria-label="Show the next observed auction lot" data-auction-dial>
+			<span class="dial-face" aria-hidden="true"></span>
+			<span class="dial-control" aria-hidden="true">↻</span>
+		</button>
+
+		<div class="auction-ticket" aria-live="polite">
+			<span class="ticket-identity">
+				<small data-country>Costa Rica · 2026 · lot 1A</small>
+				<strong data-lot>Río Blanco</strong>
+				<small data-buyer>Enwan Coffee · observed</small>
+			</span>
+			<span class="ticket-result">
+				<em data-price>$200.10</em>
+				<small>/ lb</small>
+				<small class="evidence-stamp" data-score>91.36 pts</small>
+			</span>
+		</div>
+	</div>
+	<div id="coffee-title">
+		<ArtifactCaption title="Coffee Auction Observatory" statusLabel="In development" />
+	</div>
+</article>
+
+<script>
+	const records = [
+		{
+			country: 'Costa Rica · 2026 · lot 1A',
+			lot: 'Río Blanco',
+			buyer: 'Enwan Coffee · observed',
+			price: '$200.10',
+			score: '91.36 pts',
+		},
+		{
+			country: 'El Salvador · 2026 · experimental',
+			lot: 'San Andres',
+			buyer: 'GLITCH Coffee · observed',
+			price: '$55.20',
+			score: '90.55 pts',
+		},
+		{
+			country: 'Ethiopia · 2024 · split 1A',
+			lot: 'Basha',
+			buyer: 'Angelino’s Coffee · observed',
+			price: '$445.00',
+			score: '90.50 pts',
+		},
+	];
+
+	document.querySelectorAll<HTMLElement>('[data-coffee-artifact]').forEach((artifact) => {
+		const button = artifact.querySelector<HTMLButtonElement>('[data-auction-dial]');
+		if (!button || button.dataset.ready === 'true') return;
+		button.dataset.ready = 'true';
+		let index = 0;
+
+		button.addEventListener('click', () => {
+			index = (index + 1) % records.length;
+			const record = records[index];
+			artifact.style.setProperty('--auction-turn', `${index * 120}deg`);
+			artifact.querySelector<HTMLElement>('[data-country]')!.textContent = record.country;
+			artifact.querySelector<HTMLElement>('[data-lot]')!.textContent = record.lot;
+			artifact.querySelector<HTMLElement>('[data-buyer]')!.textContent = record.buyer;
+			artifact.querySelector<HTMLElement>('[data-price]')!.textContent = record.price;
+			artifact.querySelector<HTMLElement>('[data-score]')!.textContent = record.score;
+		});
+	});
+</script>

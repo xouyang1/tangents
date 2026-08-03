@@ -1,34 +1,19 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
-import Header from '../components/Header.astro';
 import Analytics from '@vercel/analytics/astro';
 import SpeedInsights from '@vercel/speed-insights/astro';
+import BaseHead from '../components/BaseHead.astro';
+import HomepageShowcase from '../components/home/HomepageShowcase.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import '../styles/home.css';
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class="showcase-document">
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
 	</head>
-	<body>
-		<Header />
-		<main>
-			<h1>{SITE_TITLE}</h1>
-			<p>
-				Useful artifacts from problems I was already solving. New posts whenever
-				something comes together.
-			</p>
-			<p>
-				A water filter comparison table one month, a product framework the next.
-				Wherever the tangent goes.
-			</p>
-			<p>
-				<a href="/blog">Read the blog &rarr;</a>
-			</p>
-		</main>
-		<Footer />
+	<body class="showcase-page">
+		<HomepageShowcase />
 		<Analytics />
 		<SpeedInsights />
 	</body>

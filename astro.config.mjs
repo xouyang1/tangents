@@ -6,6 +6,6 @@ import { defineConfig } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://on-tangents.vercel.app',
+	site: 'https://www.exogradient.dev',
 	integrations: [mdx(), sitemap()],
 });

@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "builder-blog",
+      "name": "exogradient-site",
       "dependencies": {
         "@astrojs/mdx": "^5.0.2",
         "@astrojs/rss": "^4.0.17",

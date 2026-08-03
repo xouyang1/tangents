@@ -1,0 +1,142 @@
+---
+import ArtifactCaption from './ArtifactCaption.astro';
+---
+
+<article class="artifact water-artifact" aria-labelledby="water-title" data-water-artifact>
+	<div class="water-instrument">
+		<figure class="water-lens" data-water-lens data-mode="granular">
+			<svg viewBox="0 0 420 360" role="img" aria-labelledby="water-diagram-title water-diagram-description">
+				<title id="water-diagram-title">Granular carbon flow</title>
+				<desc id="water-diagram-description">Water follows an uneven route through loose carbon, with some contaminant continuing in the outgoing water.</desc>
+				<defs>
+					<linearGradient id="water-ribbon" x1="0" y1="0" x2="1" y2="0">
+						<stop offset="0" stop-color="#d7f3f1" />
+						<stop offset=".5" stop-color="#75cbd7" />
+						<stop offset="1" stop-color="#bce8e9" />
+					</linearGradient>
+					<clipPath id="carbon-block-clip">
+						<rect x="145" y="76" width="130" height="210" rx="38" />
+					</clipPath>
+				</defs>
+
+				<g class="mechanism-panel" data-panel="granular">
+					<path class="water-ribbon" d="M-30 172C57 132 105 213 177 171S290 132 450 189" />
+					<path class="water-highlight" d="M-22 160C55 128 106 199 176 160S292 127 439 177" />
+					<g class="granules">
+						<circle cx="137" cy="115" r="26" /><circle cx="187" cy="102" r="20" /><circle cx="240" cy="120" r="28" />
+						<circle cx="112" cy="166" r="20" /><circle cx="164" cy="161" r="29" /><circle cx="221" cy="170" r="23" /><circle cx="268" cy="168" r="20" />
+						<circle cx="130" cy="220" r="27" /><circle cx="188" cy="219" r="22" /><circle cx="241" cy="224" r="29" />
+					</g>
+					<path class="flow-line" d="M19 171C78 149 91 196 138 191S205 135 246 165 318 164 398 183" />
+					<g class="contaminants"><circle cx="42" cy="157" r="5" /><circle cx="76" cy="178" r="4" /><circle cx="355" cy="177" r="4" /></g>
+					<g class="captured"><circle cx="151" cy="136" r="5" /><circle cx="224" cy="198" r="5" /></g>
+				</g>
+
+				<g class="mechanism-panel" data-panel="structured">
+					<path class="water-ribbon" d="M-30 180C72 153 117 203 205 180S327 154 450 178" />
+					<path class="water-highlight" d="M-20 166C71 147 118 190 204 168S328 147 440 166" />
+					<g class="structured-matrix">
+						<path d="M145 91C181 116 181 147 145 172S109 228 145 270" />
+						<path d="M193 79C229 111 229 145 193 176S157 239 193 282" />
+						<path d="M241 79C205 111 205 145 241 176S277 239 241 282" />
+						<path d="M289 91C253 116 253 147 289 172S325 228 289 270" />
+					</g>
+					<g class="matrix-ties">
+						<path d="M145 91L193 79 241 79 289 91M145 172L193 176 241 176 289 172M145 270L193 282 241 282 289 270" />
+						<path d="M145 91L241 176 145 270M289 91L193 176 289 270" />
+					</g>
+					<path class="flow-line flow-split" d="M18 153C81 147 111 162 149 158M18 180C83 174 115 189 155 181M18 207C82 200 112 215 149 207M286 158C329 154 356 162 401 166M278 181C326 175 354 181 401 180M286 207C330 201 356 203 401 202" />
+					<g class="contaminants"><circle cx="43" cy="151" r="5" /><circle cx="77" cy="181" r="4" /><circle cx="52" cy="209" r="4" /></g>
+					<g class="captured"><circle cx="150" cy="157" r="5" /><circle cx="184" cy="186" r="5" /><circle cx="222" cy="154" r="5" /><circle cx="263" cy="210" r="5" /></g>
+				</g>
+
+				<g class="mechanism-panel" data-panel="block">
+					<path class="water-ribbon" d="M-30 181C70 157 116 199 204 181S326 156 450 180" />
+					<path class="water-highlight" d="M-20 168C70 151 117 188 203 169S327 150 440 168" />
+					<rect class="carbon-block" x="145" y="76" width="130" height="210" rx="38" />
+					<g clip-path="url(#carbon-block-clip)" class="block-texture">
+						<circle cx="169" cy="104" r="8" /><circle cx="205" cy="95" r="6" /><circle cx="249" cy="111" r="9" />
+						<circle cx="185" cy="139" r="7" /><circle cx="227" cy="145" r="9" /><circle cx="260" cy="164" r="6" />
+						<circle cx="163" cy="181" r="6" /><circle cx="204" cy="189" r="8" /><circle cx="244" cy="201" r="6" />
+						<circle cx="177" cy="230" r="9" /><circle cx="219" cy="242" r="7" /><circle cx="258" cy="253" r="8" />
+						<g class="blend-media"><circle cx="212" cy="123" r="9" /><circle cx="252" cy="137" r="8" /><circle cx="170" cy="205" r="9" /><circle cx="229" cy="214" r="8" /></g>
+						<path class="flow-line" d="M138 181C159 155 175 199 194 179S225 150 242 176 259 194 283 180M155 211C179 196 193 230 218 212S248 211 268 203" />
+					</g>
+					<path class="flow-line" d="M17 181C78 174 111 183 143 181M277 180C320 176 352 179 402 181" />
+					<g class="contaminants"><circle cx="46" cy="171" r="5" /><circle cx="81" cy="190" r="4" /></g>
+					<g class="captured"><circle cx="164" cy="166" r="5" /><circle cx="196" cy="195" r="5" /><circle cx="240" cy="169" r="5" /><circle cx="258" cy="218" r="5" /></g>
+				</g>
+
+				<g class="mechanism-panel" data-panel="ro">
+					<path class="water-ribbon feed-ribbon" d="M-30 180C64 153 113 194 190 180" />
+					<path class="water-highlight" d="M-20 167C64 148 114 182 190 168" />
+					<path class="membrane-shadow" d="M203 69C217 61 235 61 249 69L249 278C235 286 217 286 203 278Z" />
+					<path class="membrane" d="M196 67C210 59 228 59 242 67L242 280C228 288 210 288 196 280Z" />
+					<g class="membrane-folds"><path d="M207 65V282M219 62V285M231 64V283" /></g>
+					<path class="permeate-ribbon" d="M242 179C298 163 348 168 450 180" />
+					<path class="water-highlight permeate-highlight" d="M244 167C299 155 349 159 440 168" />
+					<path class="reject-ribbon" d="M188 179C181 207 181 235 192 259C202 280 199 303 180 326" />
+					<path class="reject-highlight" d="M190 170C186 204 186 231 196 254C205 276 202 300 184 318" />
+					<path class="flow-line" d="M17 158C82 151 127 167 188 167M17 181C82 172 127 185 190 180M17 204C83 195 128 201 190 192M247 166C301 157 348 161 403 168M247 180C305 171 350 175 403 180M247 194C306 185 351 188 403 192" />
+					<path class="reject-flow" d="M189 180C183 207 184 232 194 256C204 279 200 302 181 324" />
+					<g class="contaminants"><circle cx="43" cy="158" r="5" /><circle cx="79" cy="184" r="4" /><circle cx="129" cy="170" r="5" /><circle cx="186" cy="219" r="4" /><circle cx="194" cy="263" r="5" /><circle cx="181" cy="322" r="4" /></g>
+					<g class="captured"><circle cx="192" cy="151" r="5" /><circle cx="190" cy="178" r="5" /><circle cx="193" cy="205" r="5" /></g>
+				</g>
+			</svg>
+		</figure>
+
+		<nav class="water-selector" aria-label="Water filtration mechanism">
+			<button type="button" aria-pressed="true" data-water-mode="granular"><span>Granular carbon</span><i aria-hidden="true"></i></button>
+			<button type="button" aria-pressed="false" data-water-mode="structured"><span>Structured carbon</span><i aria-hidden="true"></i></button>
+			<button type="button" aria-pressed="false" data-water-mode="block"><span>Block + blends</span><i aria-hidden="true"></i></button>
+			<button type="button" aria-pressed="false" data-water-mode="ro"><span>Reverse osmosis</span><i aria-hidden="true"></i></button>
+		</nav>
+	</div>
+
+	<div id="water-title">
+		<ArtifactCaption
+			title="Countertop Water Filters"
+			href="/blog/countertop-water-filters/"
+			actionLabel="Read Countertop Water Filters"
+		/>
+	</div>
+</article>
+
+<script>
+	const states = {
+		granular: {
+			title: 'Granular carbon flow',
+			description: 'Water follows an uneven route through loose carbon, with some contaminant continuing in the outgoing water.',
+		},
+		structured: {
+			title: 'Structured carbon flow',
+			description: 'A fixed carbon matrix distributes water across more contact area and retains contaminant particles.',
+		},
+		block: {
+			title: 'Carbon block and media blend flow',
+			description: 'Water is forced through a porous carbon block containing visibly distinct secondary media.',
+		},
+		ro: {
+			title: 'Reverse osmosis flow',
+			description: 'Clean permeate crosses a membrane while continuous reject water carries concentrated contaminants toward a drain.',
+		},
+	};
+
+	document.querySelectorAll<HTMLElement>('[data-water-artifact]').forEach((artifact) => {
+		const lens = artifact.querySelector<HTMLElement>('[data-water-lens]');
+		const buttons = [...artifact.querySelectorAll<HTMLButtonElement>('[data-water-mode]')];
+		if (!lens || artifact.dataset.ready === 'true') return;
+		artifact.dataset.ready = 'true';
+
+		buttons.forEach((button) => {
+			button.addEventListener('click', () => {
+				const mode = button.dataset.waterMode as keyof typeof states;
+				const state = states[mode];
+				lens.dataset.mode = mode;
+				buttons.forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
+				lens.querySelector('title')!.textContent = state.title;
+				lens.querySelector('desc')!.textContent = state.description;
+			});
+		});
+	});
+</script>

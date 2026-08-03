@@ -7,15 +7,14 @@ MDX files in `src/content/blog/` with Zod-validated frontmatter in
 ## Sources of truth
 
 - Cross-project design decisions and principles: `exogradient/design-memory`
-- Homepage implementation contract: `docs/homepage-implementation.md`
-- Tangents editorial styling only: `design-identity.md`
+- Current homepage boundary: `docs/homepage-implementation.md`
 - Splash gameplay and embed behavior: the `splash-of-hue` repository
 
 Do not revive old homepage copy, a blog-first gateway, the Labs taxonomy, or
 entity resolution as inventory. Do not treat temporary prototype files as
-production source.
+production source. Legacy documents are provenance, not active requirements.
 
-## Homepage implementation
+## Implementation rules
 
 - Build the composition as Astro components in this repository.
 - Keep Countertop Water Filters and Coffee Auction Observatory native to the
@@ -27,6 +26,8 @@ production source.
 - Keep artifact controls and visuals coupled, including on mobile.
 - Avoid nested scrolling, horizontally scrolling selectors, and decorative
   boundaries without a semantic role.
+- Preserve the Countertop Water Filters article's infrastructure hero and
+  systems-level editorial opening.
 
 ## Verification
 

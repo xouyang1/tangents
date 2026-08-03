@@ -1,109 +1,100 @@
 ---
-title: Exogradient homepage implementation contract
-status: active
-updated: 2026-08-02
+title: Exogradient homepage implementation
+status: ready for publication
+updated: 2026-08-03
 owner: Exogradient site
 ---
 
-# Exogradient homepage implementation contract
+# Homepage implementation
 
-This document translates settled cross-project decisions into code boundaries
-for the production Astro site. It does not redefine the design; canonical
-rationale lives in `exogradient/design-memory`.
-
-## Production target
-
-Replace the current text-led `src/pages/index.astro` with the mixed interactive
-showcase. Port the behavior and composition from the validated prototype into
-maintainable components; do not copy the temporary HTML wholesale.
+This record describes the production boundary in this repository. Design
+rationale and reusable principles belong in `exogradient/design-memory`.
+Temporary prototype HTML is reference material, not production source.
 
 ## Current composition
 
-Desktop:
+| Artifact | Desktop | Mobile | Destination |
+| --- | --- | --- | --- |
+| Splash of Hue | Dominant left | First | Product-owned full game |
+| Countertop Water Filters | Upper right | Second | Filter editorial |
+| Coffee Auction Observatory | Lower right | Third | None while in development |
 
-- Splash of Hue is the dominant left artifact.
-- Countertop Water Filters is upper-right.
-- Coffee Auction Observatory is lower-right.
+The composition may change without moving interaction logic between artifacts.
 
-Mobile reading order is Splash, Filters, Coffee. This composition is
-provisional and should remain easy to change without rewriting artifact logic.
+## Code ownership
 
-## Component ownership
-
-Suggested site-owned boundaries:
-
-- `HomepageShowcase.astro` — composition and responsive order only.
-- `ArtifactFrame.astro` — shared title/destination/status semantics, not a
-  forced universal visual container.
-- `WaterFilterObject.astro` — four mechanism states and their selector.
-- `CoffeeAuctionObject.astro` — current development-state observatory object.
-- `SplashEmbed.astro` — integration wrapper for the product-owned miniature.
-
-Names may change during implementation; ownership must not.
+- `HomepageShowcase.astro` owns composition and responsive order.
+- `ArtifactCaption.astro` owns shared title, destination, and status semantics.
+- `SplashArtifact.astro` owns only the product embed boundary.
+- `WaterFilterArtifact.astro` owns the four mechanism states and selector.
+- `CoffeeAuctionArtifact.astro` owns the exploratory auction object.
+- `src/styles/home.css` owns homepage-scoped tokens and layout.
 
 ## Artifact contracts
 
 ### Splash of Hue
 
-- Load the canonical product-owned `?embed=play` surface.
+- Consume the product-owned `?embed=play` surface.
 - Preserve the real memorize, reconstruct, and reveal loop.
-- Do not reproduce the game as static tabs, a color-changing decoration, or a
-  site-owned simulation.
-- Keep the external full-game affordance outside the embedded gameplay area.
+- Keep the full-game link outside the embedded interaction.
+- Do not crop, restyle, clone, or replace the game in site code.
 
 ### Countertop Water Filters
 
-- Render as one connected panel containing diagram and selector.
-- The four options change the causal mechanism, not only labels.
-- Preserve the visual grammar documented in the design memory: continuous aqua
-  water, dark contaminants, and input–interaction–output in every state.
-- Link the artifact to `/blog/countertop-water-filters/`.
+- Keep diagram and selector in one connected panel.
+- Each option changes the causal mechanism, not only its label.
+- Use continuous aqua water, dark contaminants, and a visible
+  input–interaction–output relationship in every state.
+- Link to `/blog/countertop-water-filters/`.
 
 ### Coffee Auction Observatory
 
-- Preserve the current rotating-lot/auction signal as exploratory, not final
-  product definition.
-- Use a non-link development-state affordance with an accessible label.
-- Do not expose placeholder navigation or visible status prose.
+- Treat the rotating-lot signal as exploratory product language.
+- Show development state without visible status prose.
+- Do not expose a link until a real destination exists.
 
-## Site-shell boundary
+## Editorial handoff
 
-The homepage may bypass the editorial Header, Footer, constrained `main` width,
-and reader-font controls when those interfere with the showcase. Blog routes
-continue to use the editorial shell and its existing identity.
+The homepage object is an invitation into the Countertop Water Filters article;
+it is not the article's opening thesis. Preserve the article's infrastructure
+hero and systems-level framing. Do not replace them with the filter mechanism
+merely to manufacture visual continuity.
 
-Homepage-specific tokens should be scoped to the showcase rather than changing
-article typography globally.
+The article comparison may bleed to the viewport edge, but it must remain
+inside the viewport at every breakpoint. Editorial depth and evidence take
+precedence over making the article resemble a product page.
 
-## Responsive and accessibility gates
+## Site and accessibility boundaries
 
-- No nested iframe scrollbar or horizontal selector strip.
-- No clipped controls at 390×844 or similarly narrow/tall mobile viewports.
-- Titles remain spatially coupled to their artifacts.
-- All controls are keyboard reachable with visible focus.
-- Status and diagram meaning are available to assistive technology without
-  adding visible explanatory clutter.
-- Respect `prefers-reduced-motion`; no meaning depends on animation alone.
-- Touch targets remain usable without inflating text or panel chrome.
+- The homepage bypasses the editorial header, footer, reader controls, and
+  constrained prose width.
+- Blog routes retain their editorial shell.
+- Homepage tokens must not alter article typography globally.
+- Controls remain keyboard reachable with visible focus.
+- Diagram meaning remains available to assistive technology.
+- Motion respects `prefers-reduced-motion` and carries no exclusive meaning.
+- Mobile layouts use no horizontal selector or nested iframe scrolling.
 
-## Verification matrix
+## Publication state
 
-Before treating the port as reviewable:
+Verified in this repository on 2026-08-03:
 
-1. run `npm run build`;
-2. inspect desktop and mobile screenshots;
-3. exercise all four filter states;
-4. complete one Splash miniature round;
-5. verify the full-game and filter-editorial destinations;
-6. verify Coffee is not exposed as a link;
-7. test keyboard-only operation and reduced motion; and
-8. confirm the blog index and water-filter article are visually unchanged.
+- production build completes;
+- desktop and mobile layouts have no horizontal overflow;
+- all four filter states update the diagram and pressed state;
+- Coffee cycles records and has no false outbound link;
+- homepage, blog index, and filter editorial routes resolve; and
+- reduced-motion and native keyboard behavior remain intact.
 
-## Out of scope for the first port
+External dependency verified on 2026-08-03:
 
-- final Exogradient palette or identity system;
-- a Labs taxonomy;
-- entity resolution;
-- the final Coffee Auction Observatory narrative;
-- new homepage copy or a companion Splash blog post; and
-- redesigning Splash beyond the product-owned embed adaptation.
+- the deployed Splash of Hue `?embed=play` surface loads without overflow;
+- a guess can be locked in and reaches the score/reveal state; and
+- the production build points to the deployed surface rather than a local URL.
+
+## Non-goals
+
+- Labs taxonomy or entity resolution
+- Final Coffee Auction Observatory narrative
+- New homepage copy or a Splash companion article
+- Redesigning Splash inside this repository
