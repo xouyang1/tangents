@@ -4,9 +4,290 @@ import SplashArtifact from './SplashArtifact.astro';
 import WaterFilterArtifact from './WaterFilterArtifact.astro';
 ---
 
-<main class="showcase" aria-label="Exogradient artifacts">
+<main class="showcase" aria-label="Exogradient artifacts" data-homepage-showcase>
+	<header class="showcase-intro"><span>Xiaoyu Ouyang</span></header>
 	<h1 class="visually-hidden">Exogradient</h1>
 	<SplashArtifact />
 	<WaterFilterArtifact />
 	<CoffeeAuctionArtifact />
+	<p class="focus-return-hint" data-focus-return-hint aria-hidden="true">
+		<span>Scroll to return</span>
+		<kbd>Esc</kbd>
+	</p>
 </main>
+
+<script>
+	const showcase = document.querySelector<HTMLElement>('[data-homepage-showcase]');
+	const splash = showcase?.querySelector<HTMLElement>('[data-splash-artifact]');
+	const shell = splash?.querySelector<HTMLElement>('[data-splash-shell]');
+	const frame = splash?.querySelector<HTMLIFrameElement>('[data-splash-frame]');
+	const embedStatus = splash?.querySelector<HTMLElement>('[data-embed-status]');
+	const returnHint = showcase?.querySelector<HTMLElement>('[data-focus-return-hint]');
+
+	if (showcase && splash && shell && frame && embedStatus && returnHint) {
+		const focusStage = {
+			maxWidth: 1024,
+			maxHeight: 768,
+			inset: 24,
+			captionAllowance: 60,
+			minWidth: 544,
+			minShellHeight: 480,
+			minAreaGain: 1.18,
+		};
+		const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+		const focusParameter = 'artifact';
+		const focusValue = 'splash';
+		const historyMarker = 'exogradientArtifactFocus';
+		const frameOrigin = new URL(frame.src, window.location.href).origin;
+		let focused = false;
+		let compactShellArea = 0;
+		let focusAnimation: Animation | null = null;
+		let autoFocusAvailable = true;
+		let hintShown = false;
+		let hintTimer: number | undefined;
+		let pendingFocusRestore = false;
+		let pendingScrollDelta = 0;
+		let pendingDismissAnimation = true;
+		let wheelIntent = 0;
+		let wheelReset: number | undefined;
+		let touchStartY: number | null = null;
+		const embedReadyTimer = window.setTimeout(() => {
+			if (embedStatus.dataset.status === 'loading') setEmbedStatus('unavailable');
+		}, 7000);
+
+		function setEmbedStatus(state: 'loading' | 'ready' | 'unavailable') {
+			embedStatus.dataset.status = state;
+			shell.setAttribute('aria-busy', String(state === 'loading'));
+		}
+
+		function focusRequestedByURL() {
+			return new URL(window.location.href).searchParams.get(focusParameter) === focusValue;
+		}
+
+		function focusGeometryIsUseful() {
+			const targetWidth = Math.min(focusStage.maxWidth, Math.max(0, window.innerWidth - focusStage.inset));
+			const targetShellHeight = Math.min(
+				focusStage.maxHeight,
+				Math.max(0, window.innerHeight - focusStage.inset),
+			) - focusStage.captionAllowance;
+			const compactRect = shell.getBoundingClientRect();
+			const sourceArea = focused && compactShellArea
+				? compactShellArea
+				: compactRect.width * compactRect.height;
+			const targetArea = targetWidth * targetShellHeight;
+			const areaGain = sourceArea > 0 ? targetArea / sourceArea : 0;
+
+			return targetWidth >= focusStage.minWidth
+				&& targetShellHeight >= focusStage.minShellHeight
+				&& areaGain >= focusStage.minAreaGain;
+		}
+
+		function showReturnHint() {
+			if (hintShown) return;
+			hintShown = true;
+			returnHint.dataset.visible = 'true';
+			returnHint.setAttribute('aria-hidden', 'false');
+			hintTimer = window.setTimeout(() => {
+				delete returnHint.dataset.visible;
+				returnHint.setAttribute('aria-hidden', 'true');
+			}, 2400);
+		}
+
+		function hideReturnHint() {
+			if (hintTimer !== undefined) window.clearTimeout(hintTimer);
+			delete returnHint.dataset.visible;
+			returnHint.setAttribute('aria-hidden', 'true');
+		}
+
+		function setFocused(next: boolean, animate = true) {
+			if (focused === next) return;
+			const shouldAnimate = animate && !reducedMotion.matches;
+			const before = shouldAnimate ? splash.getBoundingClientRect() : null;
+			focusAnimation?.cancel();
+			focused = next;
+			if (next) showcase.dataset.focusedArtifact = focusValue;
+			else delete showcase.dataset.focusedArtifact;
+			document.documentElement.classList.toggle('has-focused-artifact', next);
+
+			if (shouldAnimate && before) {
+				const after = splash.getBoundingClientRect();
+				if (before.width && after.width) {
+					focusAnimation = splash.animate(
+						[
+							{
+								transformOrigin: 'top left',
+								transform: `translate(${before.left - after.left}px, ${before.top - after.top}px) scale(${before.width / after.width}, ${before.height / after.height})`,
+							},
+							{ transformOrigin: 'top left', transform: 'none' },
+						],
+						{ duration: 420, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' },
+					);
+				}
+			}
+
+			if (next) showReturnHint();
+			else hideReturnHint();
+		}
+
+		function finishDismissal() {
+			const scrollDelta = pendingScrollDelta;
+			const restoreFocus = pendingFocusRestore;
+			pendingScrollDelta = 0;
+			pendingFocusRestore = false;
+			pendingDismissAnimation = true;
+			window.requestAnimationFrame(() => {
+				if (scrollDelta) window.scrollBy({ top: scrollDelta, behavior: 'auto' });
+				else if (restoreFocus) frame.focus({ preventScroll: true });
+			});
+		}
+
+		function pushFocusURL() {
+			const url = new URL(window.location.href);
+			if (url.searchParams.get(focusParameter) === focusValue) return;
+			url.searchParams.set(focusParameter, focusValue);
+			const currentState = history.state && typeof history.state === 'object' ? history.state : {};
+			history.pushState({ ...currentState, [historyMarker]: focusValue }, '', url);
+		}
+
+		function replaceWithoutFocus() {
+			const url = new URL(window.location.href);
+			url.searchParams.delete(focusParameter);
+			const currentState = history.state && typeof history.state === 'object' ? { ...history.state } : {};
+			delete currentState[historyMarker];
+			history.replaceState(currentState, '', url);
+		}
+
+		function focusSplash(pushHistory = true) {
+			if (!focusGeometryIsUseful() || !autoFocusAvailable) return;
+			const compactRect = shell.getBoundingClientRect();
+			compactShellArea = compactRect.width * compactRect.height;
+			setFocused(true);
+			if (pushHistory) pushFocusURL();
+		}
+
+		function dismissSplash(
+			{ restoreFocus = true, scrollDelta = 0, animate = true }:
+			{ restoreFocus?: boolean; scrollDelta?: number; animate?: boolean } = {},
+		) {
+			if (!focused) return;
+			autoFocusAvailable = false;
+			pendingFocusRestore = restoreFocus;
+			pendingScrollDelta = scrollDelta;
+			pendingDismissAnimation = animate;
+			if (history.state?.[historyMarker] === focusValue) history.back();
+			else {
+				replaceWithoutFocus();
+				setFocused(false, animate);
+				finishDismissal();
+			}
+		}
+
+		function requestEmbedReady() {
+			frame.contentWindow?.postMessage({
+				type: 'exogradient:splash-host',
+				version: 1,
+				phase: 'probe',
+				kind: 'ready',
+			}, frameOrigin);
+		}
+
+		window.addEventListener('message', (event) => {
+			if (event.origin !== frameOrigin) return;
+			const message = event.data;
+			if (!message || message.type !== 'exogradient:splash-engagement' || message.version !== 1) return;
+			if (message.phase === 'ready' && message.kind === 'play') {
+				window.clearTimeout(embedReadyTimer);
+				setEmbedStatus('ready');
+				return;
+			}
+			if (message.phase === 'complete' && (message.kind === 'brightness' || message.kind === 'color')) {
+				focusSplash();
+			}
+			if (message.phase === 'dismiss') {
+				const scrollDelta = message.kind === 'scroll' && Number.isFinite(message.deltaY)
+					? Math.max(-240, Math.min(240, Number(message.deltaY)))
+					: 0;
+				dismissSplash({ restoreFocus: !scrollDelta, scrollDelta, animate: !scrollDelta });
+			}
+		});
+
+		showcase.addEventListener('pointerdown', (event) => {
+			if (!focused || splash.contains(event.target as Node)) return;
+			event.preventDefault();
+			event.stopPropagation();
+			dismissSplash();
+		}, { capture: true });
+
+		document.addEventListener('keydown', (event) => {
+			if (event.key !== 'Escape' || !focused) return;
+			event.preventDefault();
+			dismissSplash();
+		});
+
+		window.addEventListener('wheel', (event) => {
+			if (!focused) return;
+			event.preventDefault();
+			wheelIntent += event.deltaY;
+			if (wheelReset !== undefined) window.clearTimeout(wheelReset);
+			wheelReset = window.setTimeout(() => { wheelIntent = 0; }, 140);
+			if (Math.abs(wheelIntent) < 36) return;
+			const scrollDelta = Math.max(-240, Math.min(240, wheelIntent));
+			wheelIntent = 0;
+			dismissSplash({ restoreFocus: false, scrollDelta, animate: false });
+		}, { passive: false });
+
+		showcase.addEventListener('touchstart', (event) => {
+			if (!focused || splash.contains(event.target as Node) || event.touches.length !== 1) return;
+			touchStartY = event.touches[0].clientY;
+		}, { passive: true });
+
+		window.addEventListener('touchmove', (event) => {
+			if (!focused || touchStartY === null || event.touches.length !== 1) return;
+			const scrollDelta = touchStartY - event.touches[0].clientY;
+			if (Math.abs(scrollDelta) < 36) return;
+			event.preventDefault();
+			touchStartY = null;
+			dismissSplash({
+				restoreFocus: false,
+				scrollDelta: Math.max(-240, Math.min(240, scrollDelta)),
+				animate: false,
+			});
+		}, { passive: false });
+
+		window.addEventListener('touchend', () => { touchStartY = null; });
+
+		window.addEventListener('popstate', () => {
+			const next = focusGeometryIsUseful() && focusRequestedByURL();
+			if (focused && !next) {
+				autoFocusAvailable = false;
+				if (!pendingScrollDelta) pendingFocusRestore = true;
+			}
+			setFocused(next, next || pendingDismissAnimation);
+			if (!next) finishDismissal();
+		});
+
+		window.addEventListener('resize', () => {
+			if (!focusGeometryIsUseful() && focused) {
+				autoFocusAvailable = false;
+				replaceWithoutFocus();
+				setFocused(false, false);
+				finishDismissal();
+			} else if (!focused && focusRequestedByURL() && focusGeometryIsUseful()) {
+				const compactRect = shell.getBoundingClientRect();
+				compactShellArea = compactRect.width * compactRect.height;
+				setFocused(true, false);
+			}
+		});
+
+		frame.addEventListener('load', requestEmbedReady);
+		requestEmbedReady();
+
+		if (focusRequestedByURL()) {
+			if (focusGeometryIsUseful()) {
+				const compactRect = shell.getBoundingClientRect();
+				compactShellArea = compactRect.width * compactRect.height;
+				setFocused(true, false);
+			} else replaceWithoutFocus();
+		}
+	}
+</script>

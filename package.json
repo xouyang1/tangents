@@ -9,6 +9,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+	"test:homepage": "node --test tests/homepage-experience-contract.test.mjs",
+	"test:homepage:browser": "node tests/homepage-browser-contract.mjs",
     "astro": "astro"
   },
   "dependencies": {

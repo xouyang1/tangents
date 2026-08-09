@@ -3,23 +3,26 @@ interface Props {
 	title: string;
 	href?: string;
 	actionLabel?: string;
+	ariaLabel?: string;
 	statusLabel?: string;
 }
 
-const { title, href, actionLabel, statusLabel } = Astro.props;
+const { title, href, actionLabel, ariaLabel, statusLabel } = Astro.props;
 ---
 
-<div class="artifact-caption">
-	<h2>{title}</h2>
-	{
-		href ? (
-			<a class="artifact-outbound" href={href} aria-label={actionLabel ?? `Open ${title}`}>
-				<span aria-hidden="true">↗</span>
-			</a>
-		) : statusLabel ? (
-			<span class="artifact-status" role="img" aria-label={statusLabel} title={statusLabel}>
-				<span aria-hidden="true"></span>
+{
+	href ? (
+		<a class="artifact-caption artifact-caption-link" href={href} aria-label={ariaLabel ?? actionLabel ?? `Open ${title}`}>
+			<h2>{title}</h2>
+			{actionLabel ? <span class="artifact-action">{actionLabel}</span> : null}
+			<span class="artifact-outbound" aria-hidden="true">
+				<span>↗</span>
 			</span>
-		) : null
-	}
-</div>
+		</a>
+	) : (
+		<div class="artifact-caption">
+			<h2>{title}</h2>
+			{statusLabel ? <span class="artifact-status">{statusLabel}</span> : null}
+		</div>
+	)
+}

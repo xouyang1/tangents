@@ -1,24 +1,33 @@
 ---
 import ArtifactCaption from './ArtifactCaption.astro';
 
-const embedURL = import.meta.env.PUBLIC_SPLASH_EMBED_URL ?? 'https://splash-of-hue.vercel.app/?embed=play';
+const embedURL = import.meta.env.PUBLIC_SPLASH_EMBED_URL ?? 'https://hue.exogradient.dev/?embed=play';
 ---
 
-<article class="artifact splash-artifact" aria-labelledby="splash-title">
-	<div class="splash-shell">
+<article class="artifact splash-artifact" aria-labelledby="splash-title" data-splash-artifact>
+	<div class="splash-shell" data-splash-shell aria-busy="true">
 		<iframe
 			class="splash-frame"
+			data-splash-frame
 			src={embedURL}
 			title="Play a round of Splash of Hue"
 			loading="eager"
 			allow="fullscreen"
 		></iframe>
+		<div class="embed-status" data-embed-status data-status="loading" aria-live="polite">
+			<span data-embed-loading>Loading the playable round…</span>
+			<span data-embed-unavailable>
+				<strong>The embedded round is unavailable.</strong>
+				<a href="https://hue.exogradient.dev/">Open the full game</a>
+			</span>
+		</div>
 	</div>
 	<div id="splash-title">
 		<ArtifactCaption
 			title="Splash of Hue"
-			href="https://splash-of-hue.vercel.app/"
-			actionLabel="Play the full Splash of Hue game"
+			href="https://hue.exogradient.dev/"
+			actionLabel="Open game"
+			ariaLabel="Open the full Splash of Hue game"
 		/>
 	</div>
 </article>

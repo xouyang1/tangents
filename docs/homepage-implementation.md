@@ -1,7 +1,7 @@
 ---
 title: Exogradient homepage implementation
 status: ready for publication
-updated: 2026-08-03
+updated: 2026-08-08
 owner: Exogradient site
 ---
 
@@ -34,10 +34,32 @@ The composition may change without moving interaction logic between artifacts.
 
 ### Splash of Hue
 
-- Consume the product-owned `?embed=play` surface.
+- Consume the canonical product-owned `https://hue.exogradient.dev/?embed=play`
+  surface. A local override is deliberate development configuration only.
 - Preserve the real memorize, reconstruct, and reveal loop.
 - Keep the full-game link outside the embedded interaction.
 - Do not crop, restyle, clone, or replace the game in site code.
+
+### Splash attention prototype
+
+When the measured viewport can provide a materially larger useful stage, the
+homepage listens for the product-owned, versioned engagement message emitted
+after a completed pointer or keyboard adjustment of Splash's color controls.
+It then enlarges the existing iframe without swallowing or interrupting that
+gesture. A device label or width-only breakpoint is not sufficient.
+The focused state is addressable with `?artifact=splash` and returns through
+outside click, deliberate scroll, Escape, or browser Back. The first focus shows
+a brief return hint. Escape and wheel intent are also relayed from inside the
+cross-origin frame when Splash has no local disclosure to dismiss.
+
+After any dismissal, automatic focus is suppressed for the rest of that page
+visit so subsequent gameplay does not fight the visitor's collection intent.
+Scroll dismissal preserves direction and advances the page after restoring the
+in-flow layout; Escape restores keyboard focus to the Splash frame.
+
+This is a Splash-only hypothesis test, not a universal artifact wrapper. Phone
+widths keep the existing in-flow composition, and Water and Coffee retain their
+native interactions without focus behavior.
 
 ### Countertop Water Filters
 
