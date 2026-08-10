@@ -1,0 +1,14 @@
+{
+  "status": "approved",
+  "approvedBy": "Xiaoyu Ouyang",
+  "approvedAt": "2026-08-10",
+  "viewports": [
+    "390x844",
+    "596x1137",
+    "1280x900"
+  ],
+  "states": [
+    "coffee-static"
+  ],
+  "contentHash": "0d0e91e7740afc71bf614ebb83f36be4d78c24695e79896039587fea534744b8"
+}

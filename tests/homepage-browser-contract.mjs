@@ -1,9 +1,12 @@
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { chromium } from 'playwright';
 
 const port = 4382;
 const origin = `http://127.0.0.1:${port}`;
+const visualEvidence = [];
 const server = spawn('npm', ['run', 'preview', '--', '--host', '127.0.0.1', '--port', String(port)], {
 	stdio: 'ignore',
 });
@@ -42,12 +45,56 @@ try {
 		]) {
 			const page = await browser.newPage({ viewport });
 			await page.goto(origin, { waitUntil: 'domcontentloaded' });
+			await page.waitForFunction(
+				() => document.querySelector('[data-embed-status]')?.getAttribute('data-status') === 'ready',
+				null,
+				{ timeout: 8000 },
+			);
 			const geometry = await page.evaluate(() => ({
 				documentOverflow: document.documentElement.scrollWidth - innerWidth,
 				mainOverflow: document.querySelector('main').scrollWidth - innerWidth,
 			}));
 			assert.ok(geometry.documentOverflow <= 1, `${viewport.width}px document overflows`);
 			assert.ok(geometry.mainOverflow <= 1, `${viewport.width}px homepage overflows`);
+
+			const coffee = page.locator('.coffee-artifact');
+			const coffeeObject = coffee.locator('[data-coffee-object]');
+			const coffeeImages = coffee.locator('img');
+			const coffeeImage = coffeeImages.first();
+			await coffee.scrollIntoViewIfNeeded();
+			await coffeeImages.evaluateAll((images) => Promise.all(images.map((image) => image.decode())));
+			assert.equal(await coffeeObject.count(), 1, 'Coffee lifecycle trace must use the whole visible object');
+			assert.equal(await coffee.getByRole('button').count(), 0, 'Coffee ambient process must not imply a control');
+			assert.equal(await coffee.getByRole('link').count(), 0, 'Coffee must not imply a destination');
+			assert.equal(
+				await coffeeImage.getAttribute('alt'),
+				'One coffee moves from blossom and a selected ripe cherry through drying, parchment release, green coffee and light-medium first crack to a blooming pour-over, falling drop, quiet ripple and waiting handleless tasting cup.',
+			);
+			const coffeeGeometry = await coffeeImage.evaluate((image) => ({
+				loaded: image.complete && image.naturalWidth > 0,
+				imageWidth: image.getBoundingClientRect().width,
+				panelContentWidth: image.parentElement?.clientWidth ?? 0,
+				panelRatio: image.parentElement ? image.parentElement.clientWidth / image.parentElement.clientHeight : 0,
+			}));
+			assert.equal(coffeeGeometry.loaded, true, `${viewport.width}px Coffee study did not load`);
+			assert.ok(
+				Math.abs(coffeeGeometry.imageWidth - coffeeGeometry.panelContentWidth) <= 1,
+				`${viewport.width}px Coffee study does not fill its panel`,
+			);
+			assert.ok(Math.abs(coffeeGeometry.panelRatio - 1.72) < 0.04, `${viewport.width}px Coffee panel ratio drifted`);
+			assert.equal(await coffeeObject.locator('svg, canvas').count(), 0, 'Coffee must remain a static raster object');
+			const coffeeMotion = await coffeeObject.evaluate((element) => ({
+				animations: element.getAnimations({ subtree: true }).length,
+				brewState: element.getAttribute('data-brew-active'),
+			}));
+			assert.deepEqual(coffeeMotion, { animations: 0, brewState: null }, 'Coffee contains non-static behavior');
+
+			const evidencePath = join(tmpdir(), `tangents-homepage-${viewport.width}x${viewport.height}-coffee-static.png`);
+			await page.screenshot({ path: evidencePath, fullPage: true });
+			visualEvidence.push(evidencePath);
+			const objectEvidencePath = join(tmpdir(), `tangents-homepage-${viewport.width}x${viewport.height}-coffee-object-static.png`);
+			await coffeeObject.screenshot({ path: objectEvidencePath });
+			visualEvidence.push(objectEvidencePath);
 
 			for (const [label, mode] of [
 				['Granular carbon', 'granular'],
@@ -92,6 +139,10 @@ try {
 		try {
 			const touchPage = await touchContext.newPage();
 			await touchPage.goto(origin, { waitUntil: 'domcontentloaded' });
+			const coffeeObject = touchPage.locator('[data-coffee-object]');
+			await coffeeObject.scrollIntoViewIfNeeded();
+			assert.equal(await touchPage.locator('.coffee-artifact').getByRole('button').count(), 0);
+			assert.equal((await coffeeObject.evaluate((element) => element.getAnimations({ subtree: true }).length)), 0);
 			const splashCaption = touchPage.getByRole('link', { name: 'Open the full Splash of Hue game' });
 			const touchTreatment = await splashCaption.evaluate((element) => ({
 				tapHighlight: getComputedStyle(element).webkitTapHighlightColor,
@@ -105,6 +156,7 @@ try {
 		} finally {
 			await touchContext.close();
 		}
+
 	} finally {
 		await browser.close();
 	}
@@ -113,3 +165,4 @@ try {
 }
 
 console.log('Homepage browser contract passes at 390px, 596px, and desktop');
+console.log(`Rendered visual-review evidence:\n${visualEvidence.join('\n')}`);

@@ -490,10 +490,9 @@
 	box-shadow: 0 0 0 0.34rem rgba(216, 245, 122, 0.16);
 }
 
-/* Coffee Auction Observatory */
+/* Coffee lifecycle trace */
 
 .coffee-artifact {
-	--auction-turn: 0deg;
 	grid-column: 2;
 	grid-row: 2;
 	display: flex;
@@ -504,112 +503,29 @@
 .coffee-object {
 	min-height: 0;
 	position: relative;
-	flex: 1;
-}
-
-.auction-dial {
-	position: absolute;
-	left: 2%;
-	top: 0;
-	width: min(22vw, 16.4rem);
-	aspect-ratio: 1;
+	width: 100%;
+	aspect-ratio: 1.72;
+	flex: none;
+	display: block;
+	overflow: hidden;
+	margin: 0;
 	padding: 0;
-	border: 0;
-	border-radius: 50%;
-	background: none;
-	box-shadow: none;
-	cursor: pointer;
+	border: 1px solid rgba(24, 35, 31, 0.18);
+	border-radius: 1.75rem;
+	background: #eee9df;
+	box-shadow: 0 1.5rem 3rem rgba(24, 35, 31, 0.1);
+	color: inherit;
+	isolation: isolate;
 }
 
-.dial-face {
+.coffee-study-image {
 	position: absolute;
 	inset: 0;
-	border: 1px solid var(--line);
-	border-radius: 50%;
-	background: conic-gradient(
-		from -30deg,
-		var(--signal) 0 28%,
-		var(--paper) 28% 31%,
-		var(--forest) 31% 62%,
-		var(--paper) 62% 65%,
-		var(--teal) 65%
-	);
-	box-shadow: 0 1.5rem 3rem rgba(24, 35, 31, 0.14);
-	transform: rotate(var(--auction-turn));
-	transition: transform 540ms var(--ease);
-}
-
-.dial-control {
-	position: absolute;
-	inset: 34%;
-	display: grid;
-	place-items: center;
-	border-radius: 50%;
-	background: var(--ink);
-	color: var(--paper);
-	font-size: 1.4rem;
-	box-shadow: 0 0.7rem 1.6rem rgba(0, 0, 0, 0.28);
-}
-
-.auction-dial:hover .dial-face {
-	transform: rotate(calc(var(--auction-turn) + 7deg));
-}
-
-.auction-ticket {
-	position: absolute;
-	right: 0;
-	bottom: 0.35rem;
-	left: 31%;
-	display: grid;
-	grid-template-columns: minmax(0, 1fr) auto;
-	gap: 0.8rem;
-	padding: 1rem 1.1rem;
-	border: 1px solid rgba(24, 35, 31, 0.15);
-	background: #fffdf8;
-	box-shadow: 0 1.1rem 2.6rem rgba(24, 35, 31, 0.1);
-	transform: rotate(1deg);
-}
-
-.ticket-identity,
-.ticket-result {
-	display: flex;
-	min-width: 0;
-	flex-direction: column;
-}
-
-.auction-ticket small {
-	overflow: hidden;
-	color: #766b5c;
-	font-size: 0.52rem;
-	letter-spacing: 0.07em;
-	text-overflow: ellipsis;
-	text-transform: uppercase;
-	white-space: nowrap;
-}
-
-.auction-ticket strong,
-.auction-ticket em {
-	color: var(--ink);
-	font-family: "Lora", "Iowan Old Style", serif;
-	font-size: clamp(1.35rem, 2.4vw, 1.9rem);
-	font-style: normal;
-	font-weight: 400;
-	line-height: 0.95;
-	letter-spacing: -0.05em;
-}
-
-.auction-ticket strong {
-	overflow: hidden;
-	margin: 0.42rem 0;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-}
-
-.evidence-stamp {
-	align-self: flex-end;
-	margin-top: 0.38rem;
-	padding: 0.22rem 0.3rem;
-	border: 1px solid #7b7061;
+	width: 100%;
+	height: 100%;
+	display: block;
+	object-fit: cover;
+	object-position: center 55%;
 }
 
 @media (min-width: 560px) {
@@ -754,13 +670,9 @@
 	}
 
 	.coffee-object {
-		height: 23rem;
-		flex: none;
+		width: 100%;
 	}
 
-	.auction-dial {
-		width: 18rem;
-	}
 }
 
 @media (max-width: 620px) {
@@ -811,17 +723,7 @@
 	}
 
 	.coffee-object {
-		height: min(86vw, 22rem);
-	}
-
-	.auction-dial {
-		left: 0;
-		width: min(66vw, 17rem);
-	}
-
-	.auction-ticket {
-		left: 19%;
-		padding: 0.85rem;
+		border-radius: 1.45rem;
 	}
 
 	.artifact-caption h2 {

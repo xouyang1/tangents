@@ -17,7 +17,7 @@ Temporary prototype HTML is reference material, not production source.
 | --- | --- | --- | --- |
 | Splash of Hue | Dominant left | First | Product-owned full game |
 | Countertop Water Filters | Upper right | Second | Filter editorial |
-| Coffee Auction Observatory | Lower right | Third | None while in development |
+| Coffee | Lower right | Third | None while in development |
 
 The composition may change without moving interaction logic between artifacts.
 
@@ -27,7 +27,7 @@ The composition may change without moving interaction logic between artifacts.
 - `ArtifactCaption.astro` owns shared title, destination, and status semantics.
 - `SplashArtifact.astro` owns only the product embed boundary.
 - `WaterFilterArtifact.astro` owns the four mechanism states and selector.
-- `CoffeeAuctionArtifact.astro` owns the exploratory auction object.
+- `CoffeeArtifact.astro` owns the origin-to-roast-to-cup study.
 - `src/styles/home.css` owns homepage-scoped tokens and layout.
 
 ## Artifact contracts
@@ -69,10 +69,39 @@ native interactions without focus behavior.
   input–interaction–output relationship in every state.
 - Link to `/blog/countertop-water-filters/`.
 
-### Coffee Auction Observatory
+### Coffee
 
-- Treat the rotating-lot signal as exploratory product language.
-- Show development state without visible status prose.
+- Use `From Blossom to Cup` as the visible encounter title. It names the
+  literal endpoints shown here without implying a destination, geographic
+  traceability, or the superseded Observatory product frame.
+- Show the plant's longer cycle through blossom and mixed on-branch ripeness,
+  then make the process begin with one visibly selected ripe cherry. Move
+  through dry parchment, the hull opening to release a dense green seed, and a
+  compact yellow-to-light-medium first-crack progression before an active
+  pour-over with a waiting, properly scaled handleless sensory cup. Do not
+  invent a literal grinding stage when it cannot be shown clearly.
+- Preserve one continuous lifecycle composition across desktop and phone rather
+  than substituting a compact crop that erases stages.
+- Let natural color relationships, reflected light, and restrained variation
+  in the copper's patina carry floral, fruit, caramel, and roast emotion without
+  adding a visible band, haze, or claimed tasting result. Ground the physical
+  process with believable contact shadows; use warmed rose-copper under the
+  roast progression as the integrated heat cue. Directional sunlight may enter
+  from the upper-left corner, but its physical illumination must fall away
+  after pale parchment drying and before the first green bean so drying and
+  roast heat remain distinct causes.
+- Present the complete lifecycle as one static color image with unmistakable,
+  physically coherent upper-left drying sunlight baked into the artwork. Let
+  the still image carry craft and motion through the parchment release,
+  first-crack expansion and chaff, wet bloom, faint condensation, one falling
+  drop, and a restrained capillary ripple. Do not place an animated spotlight,
+  sweep, color filter, particle effect, or simulated liquid layer over it.
+- Treat the whole artifact as an instrument, not a false destination. Do not
+  imply that the unfinished Coffee product is publicly playable or available.
+- Keep Coffee subordinate to the published Splash and Water artifacts through
+  its smaller grid position and restrained `In the studio` caption status. The
+  phrase communicates active exploration without promising a release path; do
+  not add a false action label or decorative status illustration.
 - Do not expose a link until a real destination exists.
 
 ## Editorial handoff
@@ -99,14 +128,21 @@ precedence over making the article resemble a product page.
 
 ## Publication state
 
-Verified in this repository on 2026-08-03:
+Verified in this repository on 2026-08-09:
 
 - production build completes;
 - desktop and mobile layouts have no horizontal overflow;
 - all four filter states update the diagram and pressed state;
-- Coffee cycles records and has no false outbound link;
+- Coffee presents a legible static lifecycle without a false control, motion,
+  or outbound link;
 - homepage, blog index, and filter editorial routes resolve; and
 - reduced-motion and native keyboard behavior remain intact.
+
+The Coffee visual gate additionally requires owner review of the static artwork
+at 390×844, 596×1137, and 1280×900, including the visibility and physical
+coherence of the upper-left drying sunlight. Automated screenshots are review
+evidence, not approval; the visual gate remains unpassed until that explicit
+review is recorded against the current source and image hash.
 
 External dependency verified on 2026-08-03:
 
@@ -117,6 +153,6 @@ External dependency verified on 2026-08-03:
 ## Non-goals
 
 - Labs taxonomy or entity resolution
-- Final Coffee Auction Observatory narrative
+- Final Coffee product narrative
 - New homepage copy or a Splash companion article
 - Redesigning Splash inside this repository

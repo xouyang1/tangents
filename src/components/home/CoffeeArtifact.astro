@@ -1,0 +1,23 @@
+---
+import { Image } from 'astro:assets';
+import coffeeLifecycleTrace from '../../assets/coffee-lifecycle-craft-story.png';
+import ArtifactCaption from './ArtifactCaption.astro';
+
+const coffeeDescription = 'One coffee moves from blossom and a selected ripe cherry through drying, parchment release, green coffee and light-medium first crack to a blooming pour-over, falling drop, quiet ripple and waiting handleless tasting cup.';
+---
+
+<article class="artifact coffee-artifact" aria-labelledby="coffee-title">
+	<figure class="coffee-object" data-coffee-object>
+		<Image
+			class="coffee-study-image"
+			src={coffeeLifecycleTrace}
+			alt={coffeeDescription}
+			loading="eager"
+			decoding="async"
+			quality={92}
+		/>
+	</figure>
+	<div id="coffee-title">
+		<ArtifactCaption title="From Blossom to Cup" statusLabel="In the studio" />
+	</div>
+</article>
