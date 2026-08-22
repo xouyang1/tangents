@@ -2,10 +2,11 @@
 import CoffeeArtifact from './CoffeeArtifact.astro';
 import SplashArtifact from './SplashArtifact.astro';
 import WaterFilterArtifact from './WaterFilterArtifact.astro';
+import SiteIdentity from '../SiteIdentity.astro';
 ---
 
 <main class="showcase" aria-label="Exogradient artifacts" data-homepage-showcase>
-	<header class="showcase-intro"><span>Xiaoyu Ouyang</span></header>
+	<header class="showcase-intro"><SiteIdentity /></header>
 	<h1 class="visually-hidden">Exogradient</h1>
 	<SplashArtifact />
 	<WaterFilterArtifact />

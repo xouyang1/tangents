@@ -66,14 +66,6 @@
 	right: clamp(36px, 4.5vw, 62px);
 	left: clamp(36px, 4.5vw, 62px);
 	color: var(--ink);
-	font-family: "Lora", "Iowan Old Style", serif;
-	font-size: clamp(1.05rem, 1.45vw, 1.18rem);
-	line-height: 1.1;
-}
-
-.showcase-intro span {
-	font-weight: 400;
-	letter-spacing: -0.035em;
 }
 
 .visually-hidden {

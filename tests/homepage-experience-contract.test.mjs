@@ -58,15 +58,48 @@ test('the current homepage composition has explicit owner visual approval', asyn
 });
 
 test('Tangents owns the homepage, editorial route, and original water mechanisms', async () => {
-	const [homepage, water, articleRoute, article] = await Promise.all([
+	const [config, consts, homepage, header, identity, settings, water, articleLayout, articleRoute, article] = await Promise.all([
+		source('astro.config.mjs'),
+		source('src/consts.ts'),
 		source('src/components/home/HomepageShowcase.astro'),
+		source('src/components/Header.astro'),
+		source('src/components/SiteIdentity.astro'),
+		source('src/components/Settings.astro'),
 		source('src/components/home/WaterFilterArtifact.astro'),
+		source('src/layouts/BlogPost.astro'),
 		source('src/pages/blog/[...slug].astro'),
 		source('src/content/blog/countertop-water-filters.mdx'),
 	]);
 
 	assert.match(homepage, /<WaterFilterArtifact\s*\/>/);
-	assert.match(homepage, /<span>Xiaoyu Ouyang<\/span>/);
+	assert.match(homepage, /<SiteIdentity\s*\/>/);
+	assert.doesNotMatch(homepage, /Settings|settings-toggle/);
+	assert.match(header, /<SiteIdentity href="\/" label="Xiaoyu Ouyang — Exogradient home"\s*\/>/);
+	assert.match(header, /<Settings\s*\/>/);
+	assert.match(header, /data-site-masthead\s+data-compact="false"\s+data-motion-ready="false"/);
+	assert.match(header, /const nextState\s*=\s*String\(window\.scrollY\s*>\s*0\)/);
+	assert.match(header, /masthead\.dataset\.compact\s*!==\s*nextState[\s\S]*masthead\.dataset\.compact\s*=\s*nextState/);
+	assert.match(header, /\.site-masthead\s*\{[\s\S]*position:\s*fixed;[\s\S]*height:\s*var\(--masthead-open-height\)/);
+	assert.match(header, /\.site-masthead\[data-compact="true"\]\s*\{[\s\S]*height:\s*52px;[\s\S]*border-bottom-color:/);
+	assert.match(header, /background:\s*#ffffff;/);
+	assert.doesNotMatch(header, /\.site-masthead\s*\{[^}]*height:\s*100%/);
+	assert.match(header, /\.site-masthead\[data-motion-ready="true"\]\s*\{[\s\S]*transition:\s*height 180ms ease/);
+	assert.match(header, /function restoreMasthead\(\)[\s\S]*motionReady\s*=\s*'false'[\s\S]*updateMasthead\(\)[\s\S]*motionReady\s*=\s*'true'/);
+	assert.doesNotMatch(header, /backdrop-filter|opacity:\s*0\.|setTimeout|scrollDirection|lastScroll/);
+	assert.match(articleLayout, /html\s*\{[\s\S]*scroll-padding-top:\s*68px;/);
+	assert.doesNotMatch(articleLayout, /Footer|All rights reserved|&copy;/);
+	assert.match(identity, /display:\s*block;[\s\S]*padding:\s*0;[\s\S]*font-family:\s*"Lora",\s*"Iowan Old Style",\s*serif;[\s\S]*font-size:\s*clamp\(1\.05rem,\s*1\.45vw,\s*1\.18rem\);[\s\S]*font-weight:\s*400;[\s\S]*letter-spacing:\s*-0\.035em;[\s\S]*line-height:\s*1\.1;/);
+	assert.match(header, /\.masthead-space\s*\{[\s\S]*--masthead-open-height:\s*clamp\(72px,\s*7vw,\s*92px\);[\s\S]*height:\s*var\(--masthead-open-height\)/);
+	assert.match(header, /padding:\s*0 clamp\(36px,\s*4\.5vw,\s*62px\)/);
+	assert.match(header, /nav\s*\{[\s\S]*padding-top:\s*clamp\(1\.35rem,\s*2\.4vw,\s*1\.8rem\)/);
+	assert.match(header, /@media \(max-width:\s*980px\)[\s\S]*padding-left:\s*clamp\(1rem,\s*5vw,\s*2\.5rem\)/);
+	assert.match(header, /@media \(max-width:\s*620px\)[\s\S]*padding-left:\s*1rem/);
+	assert.doesNotMatch(header, /border-top:\s*3px solid var\(--accent\)/);
+	assert.doesNotMatch(header, /HeaderLink|>Home<\/|href="\/blog"|>Blog<\/HeaderLink>/);
+	assert.match(settings, /#settings-toggle\s*\{[\s\S]*width:\s*44px;[\s\S]*height:\s*44px;[\s\S]*margin-right:\s*-12px;[\s\S]*padding:\s*12px;[\s\S]*justify-content:\s*center;/);
+	assert.match(consts, /SITE_TITLE\s*=\s*['"]Exogradient['"]/);
+	await assert.rejects(source('src/pages/blog/index.astro'), { code: 'ENOENT' });
+	assert.match(config, /['"]\/blog['"]:\s*['"]\/['"]/);
 	assert.match(articleRoute, /getCollection\('blog'\)/);
 	assert.match(article, /title:\s*['"]Countertop Water Filters['"]/);
 	for (const mode of ['granular', 'structured', 'block', 'ro']) {

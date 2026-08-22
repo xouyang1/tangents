@@ -2,7 +2,6 @@
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
 import Analytics from '@vercel/analytics/astro';
@@ -17,10 +16,14 @@ const { title, description, pubDate, updatedDate, heroImage, ogImage } = Astro.p
 	<head>
 		<BaseHead title={title} description={description} image={ogImage ?? heroImage} />
 		<style>
+			html {
+				scroll-padding-top: 68px;
+			}
 			main {
-				width: calc(100% - 2em);
-				max-width: 100%;
+				width: auto;
+				max-width: none;
 				margin: 0;
+				padding: 0 clamp(36px, 4.5vw, 62px);
 			}
 			.hero-image {
 				width: 100%;
@@ -55,6 +58,18 @@ const { title, description, pubDate, updatedDate, heroImage, ogImage } = Astro.p
 			.last-updated-on {
 				font-style: italic;
 			}
+			@media (max-width: 980px) {
+				main {
+					padding-right: clamp(1rem, 5vw, 2.5rem);
+					padding-left: clamp(1rem, 5vw, 2.5rem);
+				}
+			}
+			@media (max-width: 620px) {
+				main {
+					padding-right: 1rem;
+					padding-left: 1rem;
+				}
+			}
 		</style>
 	</head>
 
@@ -86,7 +101,6 @@ const { title, description, pubDate, updatedDate, heroImage, ogImage } = Astro.p
 				</div>
 			</article>
 		</main>
-		<Footer />
 		<Analytics />
 		<SpeedInsights />
 	</body>

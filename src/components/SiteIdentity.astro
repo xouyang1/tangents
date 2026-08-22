@@ -1,0 +1,29 @@
+---
+interface Props {
+	href?: string;
+	label?: string;
+}
+
+const { href, label } = Astro.props;
+---
+
+{
+	href
+		? <a class="site-identity" href={href} aria-label={label}>Xiaoyu Ouyang</a>
+		: <span class="site-identity">Xiaoyu Ouyang</span>
+}
+
+<style>
+	.site-identity {
+		display: block;
+		margin: 0;
+		padding: 0;
+		color: inherit;
+		font-family: "Lora", "Iowan Old Style", serif;
+		font-size: clamp(1.05rem, 1.45vw, 1.18rem);
+		font-weight: 400;
+		letter-spacing: -0.035em;
+		line-height: 1.1;
+		text-decoration: none;
+	}
+</style>
